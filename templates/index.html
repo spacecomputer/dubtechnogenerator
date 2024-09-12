@@ -7,10 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div id="loading-overlay" class="loading-overlay">
-        <div class="loading-spinner"></div>
-        <p>Initializing Dub Techno Generator...</p>
-    </div>
     <div class="container">
         <h1>Infinite AI Dub Techno</h1>
         <div id="ascii-dj" class="ascii-dj">
@@ -28,7 +24,7 @@
  |_______|
             </pre>
         </div>
-        <button id="playButton" class="play-button" disabled>▶ Play</button>
+        <button id="playButton" class="play-button">▶ Play</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
