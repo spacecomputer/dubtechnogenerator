@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite AI Dub Techno</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Infinite AI Dub Techno</h1>
+        <div id="ascii-dj" class="ascii-dj">
+            <!-- Default ASCII art -->
+            <pre>
+   _____
+  /     \
+ |  o o  |
+ |   ^   |
+ |  \-/  |
+  \_____/
+    | |
+  __| |__
+ |       |
+ |_______|
+            </pre>
+        </div>
+        <button id="playButton" class="play-button">▶ Play</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
+    <script src="{{ url_for('static', filename='js/audio.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ascii_dj.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
