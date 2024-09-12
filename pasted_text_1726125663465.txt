@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('Attempting to create DubTechnoGenerator instance');
     const dubTechnoGenerator = new DubTechnoGenerator();
     console.log('DubTechnoGenerator instance created');
-    console.log('DubTechnoGenerator initial isPlaying state:', dubTechnoGenerator.isPlaying);
 
     try {
         console.log('Initializing DubTechnoGenerator');
@@ -35,21 +34,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     playButton.addEventListener('click', () => {
         console.log('Play button clicked');
-        console.log('isPlaying state before action:', dubTechnoGenerator.isPlaying);
         if (dubTechnoGenerator.isPlaying) {
             console.log('Attempting to stop audio and ASCII DJ');
             dubTechnoGenerator.stopAudio();
             asciiDj.stop();
             playButton.textContent = '▶ Play';
-            console.log('Audio stopped, ASCII DJ stopped, button text updated to Play');
+            console.log('Audio stopped, button text updated');
         } else {
             console.log('Attempting to start audio and ASCII DJ');
             dubTechnoGenerator.startAudio();
             asciiDj.start();
             playButton.textContent = '⏹ Stop';
-            console.log('Audio started, ASCII DJ started, button text updated to Stop');
+            console.log('Audio started, button text updated');
         }
-        console.log('isPlaying state after action:', dubTechnoGenerator.isPlaying);
     });
 
     if (window.AudioContext || window.webkitAudioContext) {
