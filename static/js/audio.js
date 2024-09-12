@@ -1,4 +1,4 @@
-yesthclass DubTechnoGenerator {
+class DubTechnoGenerator {
     constructor() {
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this.isPlaying = false;
@@ -76,4 +76,4 @@ yesthclass DubTechnoGenerator {
     }
 }
 
-const dubTechnoGenerator = new DubTechnoGenerator();
+window.dubTechnoGenerator = new DubTechnoGenerator();

@@ -11,20 +11,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const asciiDj = new AsciiDJ(asciiDjElement);
 
-    await dubTechnoGenerator.initialize();
+    // Initialize the global DubTechnoGenerator instance
+    await window.dubTechnoGenerator.initialize();
 
     playButton.addEventListener('click', () => {
         console.log('Play button clicked');
-        if (dubTechnoGenerator.isPlaying) {
+        if (window.dubTechnoGenerator.isPlaying) {
             console.log('Stopping audio and ASCII DJ');
-            dubTechnoGenerator.stopAudio();
+            window.dubTechnoGenerator.stopAudio();
             asciiDj.stop();
             playButton.textContent = '▶ Play';
         } else {
             console.log('Starting audio and ASCII DJ');
             // Resume the AudioContext after user interaction
-            dubTechnoGenerator.audioContext.resume().then(() => {
-                dubTechnoGenerator.startAudio();
+            window.dubTechnoGenerator.audioContext.resume().then(() => {
+                window.dubTechnoGenerator.startAudio();
                 asciiDj.start();
                 playButton.textContent = '⏹ Stop';
             });
