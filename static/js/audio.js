@@ -109,4 +109,3 @@ export class DubTechnoGenerator {
         console.log('Generated a beep');
     }
 }
-yes
