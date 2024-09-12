@@ -1,14 +1,9 @@
-console.log('audio.js loaded');
-
-export class DubTechnoGenerator {
+yesthclass DubTechnoGenerator {
     constructor() {
-        console.log('DubTechnoGenerator constructor called');
-        this.audioContext = null;
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         this.isPlaying = false;
         this.scheduledNotes = [];
         this.useWebGL = this.checkWebGLSupport();
-        this.bpm = 120;
-        this.loopInterval = null;
     }
 
     checkWebGLSupport() {
@@ -18,94 +13,67 @@ export class DubTechnoGenerator {
     }
 
     async initialize() {
-        console.log('Initializing DubTechnoGenerator');
-        try {
-            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            console.log('AudioContext created successfully');
-            console.log('AudioContext state after creation:', this.audioContext.state);
-
-            if (this.audioContext.state === 'suspended') {
-                await this.audioContext.resume();
-                console.log('AudioContext resumed from suspended state');
+        if (this.useWebGL) {
+            try {
+                this.model = await tf.loadLayersModel('/static/models/dub_techno_model.json');
+            } catch (error) {
+                console.error('Failed to load TensorFlow.js model:', error);
+                this.useWebGL = false;
             }
-
-            this.setupEffectChain();
-
-            if (this.useWebGL) {
-                try {
-                    this.model = await tf.loadLayersModel('/static/models/dub_techno_model.json');
-                    console.log('TensorFlow.js model loaded successfully');
-                } catch (error) {
-                    console.error('Failed to load TensorFlow.js model:', error);
-                    this.useWebGL = false;
-                }
-            }
-            console.log('Dub Techno Generator initialized successfully');
-        } catch (error) {
-            console.error('Error during DubTechnoGenerator initialization:', error);
         }
-    }
-
-    setupEffectChain() {
-        // Implement effect chain setup here
-        console.log('Effect chain setup not implemented yet');
     }
 
     startAudio() {
-        console.log('startAudio method called, isPlaying:', this.isPlaying);
-        if (this.isPlaying) {
-            console.log('Audio is already playing, returning');
-            return;
-        }
-        if (this.audioContext.state === 'suspended') {
-            console.log('AudioContext is suspended, attempting to resume');
-            this.audioContext.resume().then(() => {
-                console.log('AudioContext resumed successfully');
-                this.startPlayback();
-            }).catch(error => {
-                console.error('Failed to resume AudioContext:', error);
-            });
-        } else {
-            console.log('AudioContext is not suspended, starting playback');
-            this.startPlayback();
-        }
-    }
-
-    startPlayback() {
+        if (this.isPlaying) return;
         this.isPlaying = true;
-        console.log('Starting audio playback, isPlaying:', this.isPlaying);
         this.generateMusic();
-        this.loopInterval = setInterval(() => this.generateMusic(), 60000 / this.bpm * 4); // Generate new music every 4 beats
     }
 
     stopAudio() {
-        console.log('stopAudio method called, isPlaying:', this.isPlaying);
         this.isPlaying = false;
-        clearInterval(this.loopInterval);
-        this.scheduledNotes.forEach(note => {
-            if (note.stop) {
-                note.stop();
-            }
-        });
+        this.scheduledNotes.forEach(note => note.stop());
         this.scheduledNotes = [];
-        console.log('Audio stopped, scheduled notes cleared, isPlaying:', this.isPlaying);
     }
 
     generateMusic() {
-        if (!this.isPlaying) {
-            console.log('generateMusic called but isPlaying is false, returning');
-            return;
+        if (!this.isPlaying) return;
+
+        const now = this.audioContext.currentTime;
+        const noteDuration = 0.5;
+        const patternLength = 16;
+
+        for (let i = 0; i < patternLength; i++) {
+            const noteTime = now + i * noteDuration;
+            this.scheduleNote(noteTime, noteDuration);
         }
 
-        console.log('Generating music...');
-        // Implement music generation logic here
+        setTimeout(() => this.generateMusic(), patternLength * noteDuration * 1000);
+    }
+
+    scheduleNote(time, duration) {
         const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+
         oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(440, this.audioContext.currentTime); // A4 note
-        oscillator.connect(this.audioContext.destination);
-        oscillator.start();
-        oscillator.stop(this.audioContext.currentTime + 0.1); // Short beep
+        oscillator.frequency.setValueAtTime(this.getRandomFrequency(), time);
+
+        gainNode.gain.setValueAtTime(0, time);
+        gainNode.gain.linearRampToValueAtTime(0.5, time + 0.01);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, time + duration);
+
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+
+        oscillator.start(time);
+        oscillator.stop(time + duration);
+
         this.scheduledNotes.push(oscillator);
-        console.log('Generated a beep');
+    }
+
+    getRandomFrequency() {
+        const frequencies = [55, 110, 146.83, 220, 293.66];
+        return frequencies[Math.floor(Math.random() * frequencies.length)];
     }
 }
+
+const dubTechnoGenerator = new DubTechnoGenerator();

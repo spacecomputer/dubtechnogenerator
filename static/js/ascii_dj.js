@@ -1,8 +1,5 @@
-console.log('ascii_dj.js loaded');
-
-export class AsciiDJ {
+class AsciiDJ {
     constructor(element) {
-        console.log('AsciiDJ constructor called');
         this.element = element;
         this.frames = [
             `
@@ -32,20 +29,20 @@ export class AsciiDJ {
         ];
         this.currentFrame = 0;
         this.interval = null;
-        console.log('AsciiDJ instance created');
+        console.log('AsciiDJ instance created'); // Debug log
     }
 
     start() {
-        console.log('AsciiDJ start method called');
+        console.log('AsciiDJ start method called'); // Debug log
         this.interval = setInterval(() => {
             this.currentFrame = (this.currentFrame + 1) % this.frames.length;
             this.element.innerHTML = `<pre>${this.frames[this.currentFrame]}</pre>`;
-            console.log('AsciiDJ frame updated');
+            console.log('AsciiDJ frame updated'); // Debug log
         }, 500);
     }
 
     stop() {
-        console.log('AsciiDJ stop method called');
+        console.log('AsciiDJ stop method called'); // Debug log
         clearInterval(this.interval);
         this.interval = null;
     }
